@@ -1,7 +1,7 @@
 # Konichiwa Minasan 👋
 
 <div align="center">
-<img hight="300" width="700" alt="GIF" align="center" src="https://github.com/RubberPirate/RubberPirate/blob/main/assets/208593.gif">
+<img hight="300" width="700" alt="GIF" align="center" src="https://i.pinimg.com/originals/31/cc/dc/31ccdc2746ddf70e0fa60d98de64cc24.gif">
 </div>
 
 </br>
