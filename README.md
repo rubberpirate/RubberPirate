@@ -122,8 +122,8 @@
 <img width="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/arch_linux.png" alt="Arch Linux" title="Arch Linux"/>
 <img width="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/kali_linux.png" alt="Kali Linux" title="Kali Linux"/> </p>
 
-![rubberpirate's Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=rubberpirate&theme=dracula&show_icons=true&hide_border=false&layout=compact)
+![rubberpirate's Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=rubberpirate&theme=midnight-purple&show_icons=true&hide_border=false&layout=compact)
 
-![rubberpirate's Stats](https://github-readme-stats.vercel.app/api?username=rubberpirate&theme=dracula&show_icons=true&hide_border=false&count_private=true)
+![rubberpirate's Stats](https://github-readme-stats.vercel.app/api?username=rubberpirate&theme=midnight-purple&show_icons=true&hide_border=false&count_private=true)
 
 ![rubberpirate's Streak](https://github-readme-streak-stats.herokuapp.com/?user=rubberpirate&theme=dracula&hide_border=false)
