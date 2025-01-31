@@ -122,6 +122,8 @@
 <img width="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/arch_linux.png" alt="Arch Linux" title="Arch Linux"/>
 <img width="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/kali_linux.png" alt="Kali Linux" title="Kali Linux"/> </p>
 
+<img src="https://tryhackme-badges.s3.amazonaws.com/rubberpirate.png" alt="Your Image Badge" />
+
 ![rubberpirate's Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=rubberpirate&theme=midnight-purple&show_icons=true&hide_border=false&layout=compact)
 
 ![rubberpirate's Stats](https://github-readme-stats.vercel.app/api?username=rubberpirate&theme=midnight-purple&show_icons=true&hide_border=false&count_private=true)
