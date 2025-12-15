@@ -1,63 +1,68 @@
 ![Header](./assets/banner.png)
-<div align="center">
-  <img src="https://skillicons.dev/icons?i=rust" height="45" alt="rust logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=py" height="45" alt="python logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" height="45" alt="cplusplus logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-original.svg" height="45" alt="lua logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" height="45" alt="go logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" height="45" alt="bash logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" height="45" alt="arduino logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=aws" height="45" alt="amazonwebservices logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" height="45" alt="npm logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="45" alt="docker logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" height="45" alt="linux logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redhat/redhat-original.svg" height="45" alt="redhat logo"  />
+
+<div align="center" style="background-color: #1a1b26; padding: 10px; border-radius: 8px;">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=25&duration=3000&pause=1000&color=89DCEB&background=1A1B2600&center=true&vCenter=true&width=435&lines=I'm+Rahul+Rajith;I'm+RubberPirate;Offensive+Security;Pentesting" alt="Typing SVG" />
 </div>
 
-###
+<br/>
 
-<div align="left">
+### ⚡ About Me
+
+I'm **Rahul Rajith** (aka `@rubberpirate`), a developer passionate about **Cybersecurity**, **Automation**, and **System Administration**. I enjoy breaking things to see how they work, building automation scripts.
+
+---
+
+### 🛠️ Languages & Tools
+
+<div align="center">
+
+  <img src="https://skillicons.dev/icons?i=rust,py,cpp,lua,go,latex" height="40" alt="languages" />
+  <br/><br/>
+
+  <img src="https://skillicons.dev/icons?i=bash,arduino,linux,redhat,docker,aws" height="40" alt="system-devops" />
+  <br/><br/>
+  
+  <img src="https://skillicons.dev/icons?i=npm,postgres,sqlite,mongodb" height="40" alt="web-db" />
+
+</div>
+
+---
+
+<div align="center">
+  <br/>
+  <img src="https://github-readme-stats.vercel.app/api?username=rubberpirate&show_icons=true&theme=tokyonight&hide_border=true&bg_color=1a1b26" height="180" alt="rubberpirate's stats" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=rubberpirate&layout=compact&theme=tokyonight&hide_border=true&bg_color=1a1b26" height="180" alt="rubberpirate's top languages" />
+</div>
+
+---
+
+<div align="center">
+
   <a href="https://www.linkedin.com/in/rahul-rajith/" target="_blank">
-    <img src="https://img.shields.io/static/v1?message=LinkedIn&logo=linkedin&label=&color=0077B5&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="linkedin logo"  />
+    <img src="https://img.shields.io/static/v1?message=LinkedIn&logo=linkedin&label=&color=24292e&logoColor=white&labelColor=&style=for-the-badge" height="30" alt="linkedin logo" />
   </a>
   <a href="https://x.com/rubberpirate0" target="_blank">
-    <img src="https://img.shields.io/static/v1?message=Twitter&logo=twitter&label=&color=1DA1F2&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="twitter logo"  />
+    <img src="https://img.shields.io/static/v1?message=Twitter&logo=twitter&label=&color=24292e&logoColor=white&labelColor=&style=for-the-badge" height="30" alt="twitter logo" />
   </a>
-  <a href="rahulridhu21@gmail.com" target="_blank">
-    <img src="https://img.shields.io/static/v1?message=Gmail&logo=gmail&label=&color=D14836&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="gmail logo"  />
+  <a href="mailto:rahulridhu21@gmail.com" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Gmail&logo=gmail&label=&color=24292e&logoColor=white&labelColor=&style=for-the-badge" height="30" alt="gmail logo" />
   </a>
   <a href="https://discord.gg/Q5Zeg5Wx7d" target="_blank">
-    <img src="https://img.shields.io/static/v1?message=Discord&logo=discord&label=&color=7289DA&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="discord logo"  />
+    <img src="https://img.shields.io/static/v1?message=Discord&logo=discord&label=&color=24292e&logoColor=white&labelColor=&style=for-the-badge" height="30" alt="discord logo" />
   </a>
   <a href="https://tryhackme.com/p/rubberpirate" target="_blank">
-    <img src="https://img.shields.io/static/v1?message=TryHackMe&logo=tryhackme&label=&color=88cc14&logoColor=white&labelColor=&style=for-the-badge" height="25" alt="tryhackme logo"  />
+    <img src="https://img.shields.io/static/v1?message=TryHackMe&logo=tryhackme&label=&color=24292e&logoColor=white&labelColor=&style=for-the-badge" height="30" alt="tryhackme logo" />
   </a>
-</div>
+  <a href="https://medium.com/@rubberpirate/" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Medium&logo=medium&label=&color=24292e&logoColor=white&labelColor=&style=for-the-badge" height="30" alt="medium logo" />
+  </a>
 
+  <br/><br/>
+  
+  <a href="https://holopin.io/@rubberpirate">
+    <img src="https://holopin.me/rubberpirate" alt="An image of @rubberpirate's Holopin badges" />
+  </a>
 
-[![An image of @rubberpirate's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/rubberpirate)](https://holopin.io/@rubberpirate)
-
-###
-
-<div>
-  <img style="100%" src="https://capsule-render.vercel.app/api?type=waving&height=100&section=header&reversal=false&fontSize=70&fontColor=FFFFFF&fontAlign=50&fontAlignY=50&stroke=-&descSize=20&descAlign=50&descAlignY=50&theme=cobalt"  />
-</div>
-
-###
-
-<div align="center">
-  <img src="https://count.getloli.com/@:rubberpirate?theme=3d-num&padding=7&scale=1&align=top&pixelated=1&darkmode=auto"  />
 </div>
 
 ###
@@ -68,4 +73,10 @@
   <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/rubberpirate/rubberpirate/output/pacman-contribution-graph.svg">
 </picture>
 
-###
+<div align="center">
+  <img src="https://count.getloli.com/@:rubberpirate?theme=rule&padding=7&scale=1&align=top&pixelated=1&darkmode=auto" />
+</div>
+
+<div>
+  <img style="width: 100%;" src="https://capsule-render.vercel.app/api?type=waving&height=100&section=footer&reversal=false&fontSize=70&fontColor=FFFFFF&fontAlign=50&fontAlignY=50&stroke=-&descSize=20&descAlign=50&descAlignY=50&customColorList=14,16,19,89dceb" />
+</div>
