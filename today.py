@@ -109,7 +109,7 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del
             return stars_counter(request.json()['data']['user']['repositories']['edges'])
 
 
-def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, deletion_total=0, my_commits=0, cursor=None):
+def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, deletion_total=0, my_commits=0, cursor=None, retry_count=0):
     """
     Uses GitHub's GraphQL v4 API and cursor pagination to fetch 100 commits from a repository at a time
     """
@@ -152,6 +152,11 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
         if request.json()['data']['repository']['defaultBranchRef'] != None: # Only count commits if repo isn't empty
             return loc_counter_one_repo(owner, repo_name, data, cache_comment, request.json()['data']['repository']['defaultBranchRef']['target']['history'], addition_total, deletion_total, my_commits)
         else: return 0
+    if request.status_code in {502, 503, 504} and retry_count < 3:
+        wait_seconds = 2 ** retry_count
+        print(f'GitHub returned {request.status_code} for {owner}/{repo_name}; retrying in {wait_seconds}s')
+        time.sleep(wait_seconds)
+        return recursive_loc(owner, repo_name, data, cache_comment, addition_total, deletion_total, my_commits, cursor, retry_count + 1)
     force_close_file(data, cache_comment) # saves what is currently in the file before this program crashes
     if request.status_code == 403:
         raise Exception('Too many requests in a short amount of time!\nYou\'ve hit the non-documented anti-abuse limit!')
@@ -247,11 +252,27 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
         repo_hash, commit_count, *__ = data[index].split()
         if repo_hash == hashlib.sha256(edges[index]['node']['nameWithOwner'].encode('utf-8')).hexdigest():
             try:
-                if int(commit_count) != edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']:
+                repo_commit_count = edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']
+                _, _, cached_my_commits, cached_additions, cached_deletions = data[index].split()
+                cache_is_empty = (
+                    repo_commit_count > 0 and
+                    int(cached_my_commits) == 0 and
+                    int(cached_additions) == 0 and
+                    int(cached_deletions) == 0
+                )
+                if int(commit_count) != repo_commit_count or cache_is_empty:
                     # if commit count has changed, update loc for that repo
                     owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
-                    loc = recursive_loc(owner, repo_name, data, cache_comment)
-                    data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[2]) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
+                    print('Updating LOC cache for', edges[index]['node']['nameWithOwner'])
+                    try:
+                        loc = recursive_loc(owner, repo_name, data, cache_comment)
+                        data[index] = repo_hash + ' ' + str(repo_commit_count) + ' ' + str(loc[2]) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
+                    except Exception as error:
+                        cached_values = data[index].split()
+                        if int(cached_values[2]) or int(cached_values[3]) or int(cached_values[4]):
+                            print('Keeping cached LOC for', edges[index]['node']['nameWithOwner'], 'after error:', error)
+                        else:
+                            print('Skipping LOC for', edges[index]['node']['nameWithOwner'], 'after error:', error)
             except TypeError: # If the repo is empty
                 data[index] = repo_hash + ' 0 0 0 0\n'
     with open(filename, 'w') as f:
@@ -378,6 +399,38 @@ def parse_int_text(value):
     return int(str(value).replace(',', '').strip() or 0)
 
 
+def cached_loc_totals(comment_size=7):
+    """
+    Returns LOC totals from the cache without querying GitHub.
+    """
+    filename = 'cache/' + hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest() + '.txt'
+    try:
+        with open(filename, 'r') as f:
+            data = f.readlines()[comment_size:]
+    except FileNotFoundError:
+        return None
+
+    loc_add, loc_del, commits = 0, 0, 0
+    for line in data:
+        loc = line.split()
+        if len(loc) >= 5:
+            commits += int(loc[2])
+            loc_add += int(loc[3])
+            loc_del += int(loc[4])
+    if not data:
+        return None
+    return [loc_add, loc_del, loc_add - loc_del, True], commits
+
+
+def previous_loc_totals():
+    return [
+        parse_int_text(get_svg_text('dark_mode.svg', 'loc_add')),
+        parse_int_text(get_svg_text('dark_mode.svg', 'loc_del')),
+        parse_int_text(get_svg_text('dark_mode.svg', 'loc_data')),
+        True,
+    ], get_svg_text('dark_mode.svg', 'commit_data')
+
+
 def commit_counter(comment_size):
     """
     Counts up my total commits, using the cache file created by cache_builder.
@@ -470,13 +523,8 @@ if __name__ == '__main__':
     age_data, age_time = perf_counter(daily_readme, account_created_at)
     formatter('age calculation', age_time)
     if SKIP_LOC:
-        total_loc, loc_time = [
-            parse_int_text(get_svg_text('dark_mode.svg', 'loc_add')),
-            parse_int_text(get_svg_text('dark_mode.svg', 'loc_del')),
-            parse_int_text(get_svg_text('dark_mode.svg', 'loc_data')),
-            True,
-        ], 0
-        commit_data, commit_time = get_svg_text('dark_mode.svg', 'commit_data'), 0
+        total_loc, commit_data = cached_loc_totals() or previous_loc_totals()
+        loc_time, commit_time = 0, 0
         print('{:<23}{:>12}'.format('   LOC:', 'skipped'))
         print('{:<23}{:>12}'.format('   commits:', 'skipped'))
     else:
@@ -487,13 +535,8 @@ if __name__ == '__main__':
         except Exception as error:
             if not ALLOW_LOC_FAILURE:
                 raise
-            total_loc, loc_time = [
-                parse_int_text(get_svg_text('dark_mode.svg', 'loc_add')),
-                parse_int_text(get_svg_text('dark_mode.svg', 'loc_del')),
-                parse_int_text(get_svg_text('dark_mode.svg', 'loc_data')),
-                True,
-            ], 0
-            commit_data, commit_time = get_svg_text('dark_mode.svg', 'commit_data'), 0
+            total_loc, commit_data = cached_loc_totals() or previous_loc_totals()
+            loc_time, commit_time = 0, 0
             print('LOC calculation failed, keeping previous values:', error)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     repo_data, repo_time = perf_counter(graph_repos_stars, 'repos', ['OWNER'])
