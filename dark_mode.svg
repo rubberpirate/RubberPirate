@@ -54,24 +54,24 @@ text, tspan {white-space: pre;}
 </text>
 <text x="430" y="30" fill="#c9d1d9">
 <tspan x="430" y="30">rahul@rubberpirate</tspan> -—————————————————————————————————————-—-
-<tspan x="430" y="50" class="cc">. </tspan><tspan class="key">OS</tspan>:<tspan class="cc"> ............................ </tspan><tspan class="value">Arch Linux, Android, Linux</tspan>
+<tspan x="430" y="50" class="cc">. </tspan><tspan class="key">OS</tspan>:<tspan class="cc"> ............................ </tspan><tspan class="value">Arch Linux, Android, Windows</tspan>
 <tspan x="430" y="70" class="cc">. </tspan><tspan class="key">Uptime</tspan>:<tspan class="cc" id="age_data_dots"> ....................... </tspan><tspan class="value" id="age_data">4 years, 2 months, 21 days</tspan>
 <tspan x="430" y="90" class="cc">. </tspan><tspan class="key">Host</tspan>:<tspan class="cc"> ........................... </tspan><tspan class="value">Next Tech Lab</tspan>
 <tspan x="430" y="110" class="cc">. </tspan><tspan class="key">Kernel</tspan>:<tspan class="cc"> ........ </tspan><tspan class="value">Cybersecurity, Automation, SysAdmin</tspan>
 <tspan x="430" y="130" class="cc">. </tspan><tspan class="key">IDE</tspan>:<tspan class="cc"> .............................. </tspan><tspan class="value">Neovim, VSCode</tspan>
 <tspan x="430" y="150" class="cc">. </tspan>
-<tspan x="430" y="170" class="cc">. </tspan><tspan class="key">Languages</tspan>.<tspan class="key">Programming</tspan>:<tspan class="cc"> .... </tspan><tspan class="value">TypeScript, Python, C++, Rust</tspan>
+<tspan x="430" y="170" class="cc">. </tspan><tspan class="key">Languages</tspan>.<tspan class="key">Programming</tspan>:<tspan class="cc"> ..... </tspan><tspan class="value">TypeScript, Python, C++, Rust</tspan>
 <tspan x="430" y="190" class="cc">. </tspan><tspan class="key">Languages</tspan>.<tspan class="key">Computer</tspan>:<tspan class="cc"> ......... </tspan><tspan class="value">HTML, CSS, JavaScript, Shell</tspan>
-<tspan x="430" y="210" class="cc">. </tspan><tspan class="key">Languages</tspan>.<tspan class="key">Real</tspan>:<tspan class="cc"> .......................... </tspan><tspan class="value">English</tspan>
+<tspan x="430" y="210" class="cc">. </tspan><tspan class="key">Languages</tspan>.<tspan class="key">Real</tspan>:<tspan class="cc"> ................ </tspan><tspan class="value">English, Hindi, Malayalam</tspan>
 <tspan x="430" y="230" class="cc">. </tspan>
-<tspan x="430" y="250" class="cc">. </tspan><tspan class="key">Hobbies</tspan>.<tspan class="key">Software</tspan>:<tspan class="cc"> ......... </tspan><tspan class="value">Automation, Security Tooling</tspan>
-<tspan x="430" y="270" class="cc">. </tspan><tspan class="key">Hobbies</tspan>.<tspan class="key">Hardware</tspan>:<tspan class="cc"> ............ </tspan><tspan class="value">ESP32, RF Research</tspan>
+<tspan x="430" y="250" class="cc">. </tspan><tspan class="key">Hobbies</tspan>.<tspan class="key">Software</tspan>:<tspan class="cc"> ......... </tspan><tspan class="value">OS, Networks, Pentesting, RevEng </tspan>
+<tspan x="430" y="270" class="cc">. </tspan><tspan class="key">Hobbies</tspan>.<tspan class="key">Hardware</tspan>:<tspan class="cc"> ............ </tspan><tspan class="value">ESP32, RF, BLE, Pi, RFID</tspan>
 <tspan x="430" y="310">- Contact</tspan> -——————————————————————————————————————————————-—-
-<tspan x="430" y="330" class="cc">. </tspan><tspan class="key">Web</tspan>:<tspan class="cc"> ........................... </tspan><tspan class="value">rubberpirate.me</tspan>
-<tspan x="430" y="350" class="cc">. </tspan><tspan class="key">GitHub</tspan>:<tspan class="cc"> ................................. </tspan><tspan class="value">rubberpirate</tspan>
+<tspan x="430" y="330" class="cc">. </tspan><tspan class="key">Web</tspan>:<tspan class="cc"> ................................. </tspan><tspan class="value">rubberpirate.in</tspan>
+<tspan x="430" y="350" class="cc">. </tspan><tspan class="key">GitHub</tspan>:<tspan class="cc"> ................................ </tspan><tspan class="value">rubberpirate</tspan>
 <tspan x="430" y="370" class="cc">. </tspan><tspan class="key">LinkedIn</tspan>:<tspan class="cc"> ............................. </tspan><tspan class="value">rahul-rajith</tspan>
 <tspan x="430" y="390" class="cc">. </tspan><tspan class="key">Instagram</tspan>:<tspan class="cc"> ........................... </tspan><tspan class="value">rubberpirate_</tspan>
-<tspan x="430" y="410" class="cc">. </tspan><tspan class="key">X</tspan>:<tspan class="cc"> .............................. </tspan><tspan class="value">rubberpirate0</tspan>
+<tspan x="430" y="410" class="cc">. </tspan><tspan class="key">X</tspan>:<tspan class="cc"> ................................. </tspan><tspan class="value">rubberpirate0</tspan>
 <tspan x="430" y="450">- GitHub Stats</tspan> -—————————————————————————————————————————-—-
 <tspan x="430" y="470" class="cc">. </tspan><tspan class="key">Repos</tspan>:<tspan class="cc" id="repo_data_dots"> .... </tspan><tspan class="value" id="repo_data">51</tspan> {<tspan class="key">Contributed</tspan>: <tspan class="value" id="contrib_data">92</tspan>} | <tspan class="key">Stars</tspan>:<tspan class="cc" id="star_data_dots"> ............ </tspan><tspan class="value" id="star_data">51</tspan>
 <tspan x="430" y="490" class="cc">. </tspan><tspan class="key">Commits</tspan>:<tspan class="cc" id="commit_data_dots"> ................... </tspan><tspan class="value" id="commit_data">758</tspan> | <tspan class="key">Followers</tspan>:<tspan class="cc" id="follower_data_dots"> ........ </tspan><tspan class="value" id="follower_data">31</tspan>
