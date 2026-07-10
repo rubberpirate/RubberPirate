@@ -1,9 +1,3 @@
-<!-- ![Header](./assets/banner.png) -->
-
-<br/>
-
----
-
 <div align="center">
   <a href="https://github.com/rubberpirate/rubberpirate">
     <picture>
