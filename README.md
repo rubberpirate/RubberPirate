@@ -1,4 +1,4 @@
-![Header](./assets/banner.png)
+<!-- ![Header](./assets/banner.png) -->
 
 <br/>
 
@@ -29,6 +29,7 @@
 
 </div>
 
+---
 
 <div align="center">
 
