@@ -14,6 +14,7 @@ ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN') or os.environ.get('GITHUB_TOKEN') 
 HEADERS = {'authorization': 'token ' + ACCESS_TOKEN} if ACCESS_TOKEN else {}
 USER_NAME = os.environ.get('USER_NAME') or 'rubberpirate'
 SKIP_LOC = (os.environ.get('SKIP_LOC') or '').lower() in {'1', 'true', 'yes'}
+ALLOW_LOC_FAILURE = (os.environ.get('ALLOW_LOC_FAILURE') or '').lower() in {'1', 'true', 'yes'}
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
@@ -361,6 +362,22 @@ def find_and_replace(root, element_id, new_text):
         element.text = new_text
 
 
+def get_svg_text(filename, element_id, default='0'):
+    """
+    Reads an existing SVG value so failed API-heavy stats can keep their last successful value.
+    """
+    try:
+        root = etree.parse(filename).getroot()
+        element = root.find(f".//*[@id='{element_id}']")
+        return element.text if element is not None and element.text else default
+    except (OSError, etree.XMLSyntaxError):
+        return default
+
+
+def parse_int_text(value):
+    return int(str(value).replace(',', '').strip() or 0)
+
+
 def commit_counter(comment_size):
     """
     Counts up my total commits, using the cache file created by cache_builder.
@@ -453,14 +470,31 @@ if __name__ == '__main__':
     age_data, age_time = perf_counter(daily_readme, account_created_at)
     formatter('age calculation', age_time)
     if SKIP_LOC:
-        total_loc, loc_time = [0, 0, 0, True], 0
-        commit_data, commit_time = 0, 0
+        total_loc, loc_time = [
+            parse_int_text(get_svg_text('dark_mode.svg', 'loc_add')),
+            parse_int_text(get_svg_text('dark_mode.svg', 'loc_del')),
+            parse_int_text(get_svg_text('dark_mode.svg', 'loc_data')),
+            True,
+        ], 0
+        commit_data, commit_time = get_svg_text('dark_mode.svg', 'commit_data'), 0
         print('{:<23}{:>12}'.format('   LOC:', 'skipped'))
         print('{:<23}{:>12}'.format('   commits:', 'skipped'))
     else:
-        total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
-        formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
-        commit_data, commit_time = perf_counter(commit_counter, 7)
+        try:
+            total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
+            formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
+            commit_data, commit_time = perf_counter(commit_counter, 7)
+        except Exception as error:
+            if not ALLOW_LOC_FAILURE:
+                raise
+            total_loc, loc_time = [
+                parse_int_text(get_svg_text('dark_mode.svg', 'loc_add')),
+                parse_int_text(get_svg_text('dark_mode.svg', 'loc_del')),
+                parse_int_text(get_svg_text('dark_mode.svg', 'loc_data')),
+                True,
+            ], 0
+            commit_data, commit_time = get_svg_text('dark_mode.svg', 'commit_data'), 0
+            print('LOC calculation failed, keeping previous values:', error)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     repo_data, repo_time = perf_counter(graph_repos_stars, 'repos', ['OWNER'])
     contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
