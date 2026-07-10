@@ -179,27 +179,29 @@ def loc_counter_one_repo(owner, repo_name, data, cache_comment, history, additio
     else: return recursive_loc(owner, repo_name, data, cache_comment, addition_total, deletion_total, my_commits, history['pageInfo']['endCursor'])
 
 
-def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None, edges=[]):
-    """
-    Uses GitHub's GraphQL v4 API to query all the repositories I have access to (with respect to owner_affiliation)
-    Queries 60 repos at a time, because larger queries give a 502 timeout error and smaller queries send too many
-    requests and also give a 502 error.
-    Returns the total number of lines of code in all repositories
-    """
+def request_graph_data(func_name, query, variables):
+    request = simple_request(func_name, query, variables)
+    response = request.json()
+    if 'data' not in response:
+        raise Exception(func_name, ' returned GraphQL errors', response.get('errors'), QUERY_COUNT)
+    return response['data']
+
+
+def owned_repo_edges(owner_affiliation, cursor=None):
     query_count('loc_query')
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
             repositories(first: 60, after: $cursor, ownerAffiliations: $owner_affiliation) {
-            edges {
-                node {
-                    ... on Repository {
-                        nameWithOwner
-                        defaultBranchRef {
-                            target {
-                                ... on Commit {
-                                    history {
-                                        totalCount
+                edges {
+                    node {
+                        ... on Repository {
+                            nameWithOwner
+                            defaultBranchRef {
+                                target {
+                                    ... on Commit {
+                                        history {
+                                            totalCount
                                         }
                                     }
                                 }
@@ -214,13 +216,102 @@ def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None,
             }
         }
     }'''
-    variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
-    request = simple_request(loc_query.__name__, query, variables)
-    if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:   # If repository data has another page
-        edges += request.json()['data']['user']['repositories']['edges']            # Add on to the LoC count
-        return loc_query(owner_affiliation, comment_size, force_cache, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
-    else:
-        return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size, force_cache)
+    data = request_graph_data(owned_repo_edges.__name__, query, {
+        'owner_affiliation': owner_affiliation,
+        'login': USER_NAME,
+        'cursor': cursor,
+    })
+    connection = data['user']['repositories']
+    edges = connection['edges']
+    if connection['pageInfo']['hasNextPage']:
+        edges += owned_repo_edges(owner_affiliation, connection['pageInfo']['endCursor'])
+    return edges
+
+
+def contributed_repo_edges(cursor=None):
+    query_count('loc_query')
+    query = '''
+    query ($login: String!, $cursor: String) {
+        user(login: $login) {
+            repositoriesContributedTo(first: 60, after: $cursor, contributionTypes: [COMMIT]) {
+                edges {
+                    node {
+                        ... on Repository {
+                            nameWithOwner
+                            defaultBranchRef {
+                                target {
+                                    ... on Commit {
+                                        history {
+                                            totalCount
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                }
+            }
+        }
+    }'''
+    data = request_graph_data(contributed_repo_edges.__name__, query, {
+        'login': USER_NAME,
+        'cursor': cursor,
+    })
+    connection = data['user']['repositoriesContributedTo']
+    edges = connection['edges']
+    if connection['pageInfo']['hasNextPage']:
+        edges += contributed_repo_edges(connection['pageInfo']['endCursor'])
+    return edges
+
+
+def unique_repo_edges(edges):
+    unique_edges = []
+    seen_repos = set()
+    for edge in edges:
+        if not repo_has_visible_history(edge):
+            print('Skipping repo without visible commit history', edge['node']['nameWithOwner'])
+            continue
+        name = edge['node']['nameWithOwner']
+        if name not in seen_repos:
+            seen_repos.add(name)
+            unique_edges.append(edge)
+    return unique_edges
+
+
+def repo_has_visible_history(edge):
+    default_branch = edge['node'].get('defaultBranchRef')
+    if default_branch is None:
+        return False
+    target = default_branch.get('target')
+    if target is None:
+        return False
+    return target.get('history') is not None
+
+
+def repo_commit_total(edge):
+    return edge['node']['defaultBranchRef']['target']['history']['totalCount']
+
+
+def loc_query(owner_affiliation, comment_size=0, force_cache=False):
+    """
+    Uses GitHub's GraphQL v4 API to query owned/collaborator repositories plus
+    repositories the user has committed to. Organization-member visibility is
+    intentionally excluded so unrelated org repositories are not scanned.
+    Returns the total number of lines of code in all repositories
+    """
+    direct_affiliations = [
+        affiliation for affiliation in owner_affiliation
+        if affiliation in {'OWNER', 'COLLABORATOR'}
+    ]
+    owned_edges = owned_repo_edges(direct_affiliations)
+    contributed_edges = contributed_repo_edges()
+    edges = unique_repo_edges(owned_edges + contributed_edges)
+    print('LOC repository scan:', len(owned_edges), 'owned/collaborator repos +', len(contributed_edges), 'committed-to repos =', len(edges), 'unique repos')
+    return cache_builder(edges, comment_size, force_cache)
 
 
 def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
@@ -240,7 +331,16 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
         with open(filename, 'w') as f:
             f.writelines(data)
 
-    if len(data)-comment_size != len(edges) or force_cache: # If the number of repos has changed, or force_cache is True
+    edge_hashes = {
+        hashlib.sha256(edge['node']['nameWithOwner'].encode('utf-8')).hexdigest()
+        for edge in edges
+    }
+    cached_hashes = {
+        line.split()[0]
+        for line in data[comment_size:]
+        if line.split()
+    }
+    if len(data)-comment_size != len(edges) or cached_hashes != edge_hashes or force_cache: # If the repositories have changed, or force_cache is True
         cached = False
         flush_cache(edges, filename, comment_size)
         with open(filename, 'r') as f:
@@ -252,7 +352,10 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
         repo_hash, commit_count, *__ = data[index].split()
         if repo_hash == hashlib.sha256(edges[index]['node']['nameWithOwner'].encode('utf-8')).hexdigest():
             try:
-                repo_commit_count = edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']
+                if not repo_has_visible_history(edges[index]):
+                    data[index] = repo_hash + ' 0 0 0 0\n'
+                    continue
+                repo_commit_count = repo_commit_total(edges[index])
                 _, _, cached_my_commits, cached_additions, cached_deletions = data[index].split()
                 cache_is_empty = (
                     repo_commit_count > 0 and
