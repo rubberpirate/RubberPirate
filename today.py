@@ -10,9 +10,10 @@ import hashlib
 # Account permissions: read:Followers, read:Starring, read:Watching
 # Repository permissions: read:Commit statuses, read:Contents, read:Issues, read:Metadata, read:Pull Requests
 # Issues and pull requests permissions not needed at the moment, but may be used in the future
-ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN') or ''
+ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN') or os.environ.get('GITHUB_TOKEN') or ''
 HEADERS = {'authorization': 'token ' + ACCESS_TOKEN} if ACCESS_TOKEN else {}
 USER_NAME = os.environ.get('USER_NAME') or 'rubberpirate'
+SKIP_LOC = (os.environ.get('SKIP_LOC') or '').lower() in {'1', 'true', 'yes'}
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
@@ -451,9 +452,15 @@ if __name__ == '__main__':
     account_created_at = datetime.datetime.strptime(acc_date, '%Y-%m-%dT%H:%M:%SZ')
     age_data, age_time = perf_counter(daily_readme, account_created_at)
     formatter('age calculation', age_time)
-    total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
-    formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
-    commit_data, commit_time = perf_counter(commit_counter, 7)
+    if SKIP_LOC:
+        total_loc, loc_time = [0, 0, 0, True], 0
+        commit_data, commit_time = 0, 0
+        print('{:<23}{:>12}'.format('   LOC:', 'skipped'))
+        print('{:<23}{:>12}'.format('   commits:', 'skipped'))
+    else:
+        total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
+        formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
+        commit_data, commit_time = perf_counter(commit_counter, 7)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     repo_data, repo_time = perf_counter(graph_repos_stars, 'repos', ['OWNER'])
     contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
